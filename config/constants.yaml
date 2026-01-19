@@ -1,0 +1,20 @@
+# Financial Constants
+GAS_COST_PER_THERM: 1.25  # $/therm
+ELEC_COST_PER_KWH: 0.22   # $/kWh
+DISCOUNT_RATE: 0.07       # 7%
+PENALTY_RATE_PER_TON: 268 # $/tCO2e (LL97)
+
+# Technical Constants
+HEAT_PUMP_COP: 3.0        # Coefficient of Performance
+GAS_BOILER_EFFICIENCY: 0.8 # 80% efficiency
+RETROFIT_COST_PER_SQFT: 30 # $/sqft (Simple estimate)
+
+# Emission Factors (NYC / LL97)
+# 1 therm = 0.005311 tCO2e (53.11 kg/MMBtu -> 10 therms = 1 MMBtu approx? Need precise conversion)
+# EPA: 53.06 kg CO2/mmbtu. 1 therm = 0.1 mmbtu. => 5.306 kg => 0.005306 tCO2e/therm.
+# LL97 value for 2024-2029 for Natural Gas is 0.005311 tCO2e / therm (approx).
+# Let's use 0.005311 tCO2e/therm.
+EMISSION_FACTOR_GAS_TCO2E_PER_THERM: 0.005311
+
+# Grid Electricity (2024-2029 limits use 0.000288962 tCO2e/kWh)
+EMISSION_FACTOR_ELEC_TCO2E_PER_KWH: 0.000288962

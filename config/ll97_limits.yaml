@@ -1,0 +1,15 @@
+# LL97 Carbon Limits (kgCO2e/sqft/year)
+# Source: NYC Local Law 97
+2024:
+  Office: 8.46
+  Multifamily: 6.75
+  Hotel: 9.87
+  Store: 11.81
+  Industrial: 23.81
+
+2030:
+  Office: 4.53
+  Multifamily: 3.52  # Assuming stricter limits for 2030
+  Hotel: 5.26
+  Store: 4.53
+  Industrial: 10.55

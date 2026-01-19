@@ -1,0 +1,9 @@
+pydantic
+pyyaml
+pandas
+requests
+fastapi
+uvicorn
+pytest
+numpy-financial
+httpx
