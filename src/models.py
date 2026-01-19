@@ -10,6 +10,8 @@ class Building(BaseModel):
     annual_gas_usage_therms: float = Field(..., ge=0, description="Annual gas usage in therms")
     annual_elec_usage_kwh: float = Field(..., ge=0, description="Annual electricity usage in kWh")
     property_type: str = Field(..., description="Type of property (e.g., Office, Multifamily)")
+    latitude: Optional[float] = Field(None, description="Latitude")
+    longitude: Optional[float] = Field(None, description="Longitude")
 
     @field_validator('property_type')
     @classmethod

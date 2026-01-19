@@ -31,8 +31,13 @@ def get_value(record: Dict[str, Any], keys: List[str], default: float = 0.0) -> 
     """Helper to get float value from multiple potential keys."""
     for key in keys:
         if key in record and record[key] is not None:
+            val = record[key]
+            # Handle "Not Available" or other strings
+            if isinstance(val, str):
+                if val.lower() in ["not available", "n/a", "nan", ""]:
+                    continue
             try:
-                return float(record[key])
+                return float(val)
             except (ValueError, TypeError):
                 continue
     return default
@@ -54,20 +59,42 @@ def normalize_building_data(raw_data: List[Dict[str, Any]]) -> List[Building]:
                 continue
 
             # Extract Energy
-            # Note: 2023 data usually has these fields.
-            gas_therms = get_value(record, ["natural_gas_use_therms"])
-            elec_kwh = get_value(record, ["electricity_use_grid_purchase_kwh", "electricity_use_generated_from_onsite_renewable_systems_kwh"])
+            # Note: 2023 data keys are often in kBtu
+            
+            # 1. Gas (Target: Therms)
+            # Try specific kbtu field first, then generic therms
+            gas_kbtu = get_value(record, ["natural_gas_use_kbtu"])
+            if gas_kbtu > 0:
+                gas_therms = gas_kbtu / 100.0 # 1 Therm = 100 kBtu
+            else:
+                gas_therms = get_value(record, ["natural_gas_use_therms"])
+
+            # 2. Key for Electricity (Target: kWh)
+            # Try specific kbtu field first
+            elec_kbtu = get_value(record, ["electricity_use_grid_purchase_kbtu", "electricity_use_grid_purchase"])
+            if elec_kbtu > 0:
+                 # Note: "electricity_use_grid_purchase" in 2023 dataset often seems to be kBtu based on context with other kBtu fields
+                 # 1 kWh = 3.41214 kBtu
+                 elec_kwh = elec_kbtu / 3.41214
+            else:
+                 elec_kwh = get_value(record, ["electricity_use_grid_purchase_kwh", "electricity_use_generated_from_onsite_renewable_systems_kwh"])
             
             # Extract Type
             raw_type = record.get("primary_property_type_self_selected", "Office")
             prop_type = map_property_type(raw_type)
+
+            # Extract Geo
+            lat = get_value(record, ["latitude"])
+            lon = get_value(record, ["longitude"])
 
             building = Building(
                 building_id=b_id,
                 gross_sq_ft=sqft,
                 annual_gas_usage_therms=gas_therms,
                 annual_elec_usage_kwh=elec_kwh,
-                property_type=prop_type
+                property_type=prop_type,
+                latitude=lat if lat != 0 else None,
+                longitude=lon if lon != 0 else None
             )
             buildings.append(building)
             

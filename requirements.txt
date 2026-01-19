@@ -7,3 +7,5 @@ uvicorn
 pytest
 numpy-financial
 httpx
+streamlit
+plotly
