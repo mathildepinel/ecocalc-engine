@@ -8,11 +8,12 @@ from src.engine.penalty import calculate_penalty
 
 # --- Sidebar Parameters ---
 st.sidebar.header("Map Parameters")
+selected_year = st.sidebar.radio("Select Year", [2024, 2030], horizontal=True)
 sample_size = st.sidebar.slider("Sample Size", min_value=100, max_value=2000, value=500, step=100)
 fetch_btn = st.sidebar.button("Fetch & Map Data", type="primary")
 
 # --- Main Content ---
-st.title("🗺️ Citywide Penalty Heatmap (2024 Est.)")
+st.title(f"🗺️ Citywide Penalty Heatmap ({selected_year} Est.)")
 st.markdown("Visualizing buildings with projected Local Law 97 penalties.")
 
 if 'map_data' not in st.session_state:
@@ -26,13 +27,13 @@ if fetch_btn:
         results = []
         for b in buildings:
             if b.latitude and b.longitude:
-                p_2024 = calculate_penalty(b, 2024)
-                if p_2024 > 0:
+                penalty_val = calculate_penalty(b, selected_year)
+                if penalty_val > 0:
                         results.append({
                         "building_id": b.building_id,
                         "lat": b.latitude,
                         "lon": b.longitude,
-                        "penalty": p_2024,
+                        "penalty": penalty_val,
                         "address": b.property_type # Using type as proxy for name/address for now
                     })
         

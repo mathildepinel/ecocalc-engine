@@ -3,7 +3,6 @@ from pathlib import Path
 from src.models import Building
 
 # Load Limits
-# In a real app, this path handling would be more robust or injected.
 BASE_DIR = Path(__file__).parent.parent.parent
 with open(BASE_DIR / "config" / "ll97_limits.yaml", "r") as f:
     LL97_LIMITS = yaml.safe_load(f)
@@ -37,8 +36,7 @@ def calculate_penalty(building: Building, year: int) -> float:
     limit_factor = limits.get(building.property_type)
     
     if limit_factor is None:
-        # Default fallback or raise error? defaulting to high limit (no penalty) or 0 limit (max penalty)?
-        # Let's assume safely 0 penalty if unknown type to avoid scaring users, but log warning in real app.
+        # Assume 0 penalty if unknown type.
         return 0.0
 
     # 2. Calculate Limit in tCO2e
