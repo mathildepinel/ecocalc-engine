@@ -10,7 +10,7 @@ GAS_BOILER_EFFICIENCY: 0.8 # 80% efficiency
 RETROFIT_COST_PER_SQFT: 30 # $/sqft (Simple estimate)
 
 # Emission Factors (NYC / LL97)
-# 1 therm = 0.005311 tCO2e (53.11 kg/MMBtu -> 10 therms = 1 MMBtu approx? Need precise conversion)
+# 1 therm = 0.005311 tCO2e (53.11 kg/MMBtu -> 10 therms = 1 MMBtu approx, Need precise conversion)
 # EPA: 53.06 kg CO2/mmbtu. 1 therm = 0.1 mmbtu. => 5.306 kg => 0.005306 tCO2e/therm.
 # LL97 value for 2024-2029 for Natural Gas is 0.005311 tCO2e / therm (approx).
 # Let's use 0.005311 tCO2e/therm.
