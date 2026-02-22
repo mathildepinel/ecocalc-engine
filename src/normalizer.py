@@ -42,9 +42,14 @@ def get_value(record: Dict[str, Any], keys: List[str], default: float = 0.0) -> 
                 continue
     return default
 
+# Maximum plausible site EUI (kBtu/ft²). NYC median office ~80, worst real buildings ~500.
+# Records above this threshold are almost certainly estimated/aggregated campus data.
+MAX_SITE_EUI_KBTU_FT2 = 5000.0
+
 def normalize_building_data(raw_data: List[Dict[str, Any]]) -> List[Building]:
     """
     Normalizes raw NYC Open Data records into Building objects.
+    Records with implausibly high site EUI (> 5,000 kBtu/ft²) are skipped as bad data.
     """
     buildings = []
     
@@ -57,6 +62,21 @@ def normalize_building_data(raw_data: List[Dict[str, Any]]) -> List[Building]:
             sqft = get_value(record, ["property_gfa_self_reported", "gross_floor_area_ft"])
             if sqft <= 0:
                 continue
+
+            # --- Sanity filter: skip records with implausible site EUI ---
+            site_eui_raw = record.get("site_eui_kbtu_ft")
+            if site_eui_raw is not None and site_eui_raw != "Not Available":
+                try:
+                    site_eui = float(site_eui_raw)
+                    if site_eui > MAX_SITE_EUI_KBTU_FT2:
+                        logger.warning(
+                            f"Skipping building {b_id}: site EUI {site_eui:.0f} kBtu/ft² "
+                            f"exceeds sanity threshold of {MAX_SITE_EUI_KBTU_FT2:.0f}. "
+                            "Likely estimated/aggregated campus data."
+                        )
+                        continue
+                except (ValueError, TypeError):
+                    pass  # If we can't parse EUI, proceed normally
 
             # Extract Energy
             # Note: 2023 data keys are often in kBtu
