@@ -75,7 +75,7 @@ Run the full test suite to verify the "decision-grade" logic:
 pytest
 ```
 
-## Features for Systems Leads
+## Features
 -   **Canoncial Logic**: Rules (LL97 limits) are separated from Code (Calculation Engine) via YAML configuration.
 -   **Defensibility**: Unit tests cover edge cases (e.g., negative savings, infinite payback).
 -   **Data Integrity**: Pydantic models ensure no "garbage in, garbage out."
